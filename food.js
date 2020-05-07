@@ -1,5 +1,5 @@
-const request = require('request');
-const cheerio = require('cheerio');
+const request = require('request');  // npm install request  --save  
+const cheerio = require('cheerio');  // npm install cheerio  --save
 const ObjectsToCsv = require('objects-to-csv');  // npm install objects-to-csv  --save
 const https = require('https');
 
@@ -69,40 +69,46 @@ request(url, (err, res, body) => {
         //以下待確認 二次爬蟲 
         const urlInnerpage = linkList;       
         //以下測試linkList object2string plus for loop
-        //console.log(linkList, typeof (linkList), typeof (linkList[0]));  //  [], object, string
-        //console.log(linkList[0]);  //all address
-        // linkList.forEach(function (item, index, array) {
-        //     console.log(item, index);
-        // });
+        // console.log(linkList, typeof (linkList), typeof (linkList[0]));  //  [], object, string
+         console.log(linkList[0]);  //all address    
+         console.log(linkList[1]);  //undefined  
+        // let teststr=linkList[0].split("/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/");
+        // console.log(teststr[0]);
+
+        /* 需要 http(s) protocol */
+        // /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+        /* 不需要 http(s) protocol */
+        // / [-a - zA - Z0 - 9@:%._\+~#=]{ 2, 256 } \.[a - z]{ 2, 6 } \b([-a - zA - Z0 - 9@:% _\+.~#?&//=]*)/         
+        
         //以上測試
-        // https.get(urlInnerpage, (res) => {
-        //     var html = ""
-        //     res.on("data", (data) => {
-        //         html += data
-        //     })
+        https.get(urlInnerpage, (res) => {
+            var html = ""
+            res.on("data", (data) => {
+                html += data
+            })
 
-        //     res.on("end", () => {                
-        //         const $ = cheerio.load(html);
-        //         //console.log(html);                
-        //         let address = [];
-        //         $('.panel .tab-panel .panel-wrapper .content p.vendor-location').each(function (i, elem) {
-        //             address.push($(this).text());
-        //             console.log(address);
-        //         })                
+            res.on("end", () => {                
+                const $ = cheerio.load(html);
+                //console.log(html);                
+                let address = [];
+                $('.panel .tab-panel .panel-wrapper .content p.vendor-location').each(function (i, elem) {
+                    address.push($(this).text());
+                    console.log(address);
+                })                
 
-        //     })
-        // }).on("error", (e) => {
-        //     //console.log(`获取数据失败: ${e.message}`)
-        // })
+            })
+        }).on("error", (e) => {
+            //console.log(`获取数据失败: ${e.message}`)
+        })
         
         
         
         // //寫入csv
-        const csv = new ObjectsToCsv(data);
-        csv.toDisk('./科技大樓站list.csv', { append: true });  //true是覆蓋原檔
+        // const csv = new ObjectsToCsv(data);
+        // csv.toDisk('./科技大樓站list2.csv', { append: true });  //true是覆蓋原檔
         
     
     }
-        console.log('資料寫入完成');
+        // console.log('資料寫入完成');
         
 })
